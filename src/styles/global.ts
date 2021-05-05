@@ -24,9 +24,25 @@ export default createGlobalStyle`
     --red-light: #d72636;
   }
 
+  #root {
+    margin: 0 auto;
+    padding: 0 20px 50px;
+    @media (min-width: 1600px) {
+      max-width: 70%;
+    }
+
+    @media (min-width: 200px) and (max-width: 1199px) {
+      max-width: 95%;
+    }
+
+    @media (min-width: 1200px) {
+      max-width: 85%;
+    }
+  }
+
   body{
-    background: #312E38;
-    color: #FFFF;
+    background: var(--blue);
+    color: var(--white);
     -webkit-font-smoothing: antialiased;
   }
 
@@ -38,6 +54,11 @@ export default createGlobalStyle`
   h1, h2, h3, h4, h5, h6, strong {
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
+  }
+
+  span{
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.87rem;
   }
 
   h1{

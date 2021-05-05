@@ -1,13 +1,11 @@
 import React from 'react';
 
-import { Container, Wrapper } from './styles';
+import { Container } from './styles';
 
 export const Header: React.FC = () => {
   return (
     <Container>
-      <Wrapper>
-        <h1>Gerenciador Unidades Curriculares</h1>
-      </Wrapper>
+      <h1>Gerenciador Unidades Curriculares</h1>
     </Container>
   );
 };

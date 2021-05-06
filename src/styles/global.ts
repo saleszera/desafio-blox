@@ -13,6 +13,7 @@ export default createGlobalStyle`
     --gray: #757575;
     --gray-light: #d2d2d2;
     --white: #ffff;
+    --blue-light: #86A6FD;
     --blue: #5f8afc;
   }
 

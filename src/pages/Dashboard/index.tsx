@@ -9,6 +9,8 @@ import {
   FilterInputContainer,
   ItemsOrderContainer,
   ItemContainer,
+  NextPageButtonContainer,
+  NextPageButton,
 } from './styles';
 import { Card } from '../../components/Card';
 import { api } from '../../services/api';
@@ -37,8 +39,10 @@ export const Dashboard: React.FC = () => {
   const [bloxesFiltered, setBloxesFiltered] = useState<Bloxe[]>();
   const [optionActive, setOptionActive] = useState('Todos');
   const [token, setToken] = useState<string>();
+  const [page, setPage] = useState(1);
   const [isGridActive, setIsGridActive] = useState(true);
   const [isInputActive, setIsInputActive] = useState(false);
+  const [isFinalPageReached, setIsFinalPageReached] = useState(false);
 
   useEffect(() => {
     function loadToken() {
@@ -63,52 +67,62 @@ export const Dashboard: React.FC = () => {
     function loadData() {
       const bloxesStored = localStorage.getItem('@desafioBlox:bloxes');
 
-      if (bloxesStored) {
+      if (bloxesStored && page === 1) {
         setBloxes(JSON.parse(bloxesStored));
         setBloxesFiltered(JSON.parse(bloxesStored));
       } else {
         api
-          .get('/bloxes?per=8&page=1', {
+          .get(`/bloxes?per=8&page=${page}`, {
             headers: {
               Authorization: token,
             },
           })
           .then(({ data: bloxesData }) => {
-            const bloxesFormatted = bloxesData.map((item: Bloxe) => {
-              return {
-                ...item,
-                date_limit_edition: item.date_limit_edition
-                  ? new Date(item.date_limit_edition).toLocaleDateString(
-                      'pt-BR',
-                      {
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric',
-                      }
-                    )
-                  : 'Sem data limite',
-                knowledge_area: {
-                  ...item.knowledge_area,
-                  icon_url: item.knowledge_area.icon_url
-                    ? item.knowledge_area.icon_url
-                    : 'https://images.unsplash.com/photo-1520004434532-668416a08753?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-                },
-              };
-            });
+            if (bloxesData.length === 0) {
+              setIsFinalPageReached(true);
+            } else {
+              const bloxesFormatted = bloxesData.map((item: Bloxe) => {
+                return {
+                  ...item,
+                  date_limit_edition: item.date_limit_edition
+                    ? new Date(item.date_limit_edition).toLocaleDateString(
+                        'pt-BR',
+                        {
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric',
+                        }
+                      )
+                    : 'Sem data limite',
+                  knowledge_area: {
+                    ...item.knowledge_area,
+                    icon_url: item.knowledge_area.icon_url
+                      ? item.knowledge_area.icon_url
+                      : 'https://images.unsplash.com/photo-1520004434532-668416a08753?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                  },
+                };
+              });
 
-            setBloxes(bloxesFormatted);
-            setBloxesFiltered(bloxesFormatted);
-            localStorage.setItem(
-              '@desafioBlox:bloxes',
-              JSON.stringify(bloxesFormatted)
-            );
+              setBloxes(bloxesFormatted);
+              setBloxesFiltered(bloxesFormatted);
+              setIsFinalPageReached(false);
+
+              if (page === 1) {
+                localStorage.setItem(
+                  '@desafioBlox:bloxes',
+                  JSON.stringify(bloxesFormatted)
+                );
+              }
+            }
+          })
+          .catch(() => {
+            loadToken();
           });
       }
     }
 
-    loadToken();
     loadData();
-  }, [token]);
+  }, [token, page]);
 
   const handleFilterByStatus = useCallback(
     (option: string) => {
@@ -178,6 +192,15 @@ export const Dashboard: React.FC = () => {
     [bloxes]
   );
 
+  const handleIncrementPage = useCallback(() => {
+    setPage(oldState => oldState + 1);
+  }, []);
+
+  const handleDecrementPage = useCallback(
+    () => page > 1 && setPage(oldState => oldState - 1),
+    [page]
+  );
+
   return (
     <Container>
       <FilterTypesContainer>
@@ -233,6 +256,18 @@ export const Dashboard: React.FC = () => {
         {bloxesFiltered &&
           bloxesFiltered.map(item => <Card key={item.title} bloxe={item} />)}
       </ItemContainer>
+
+      <NextPageButtonContainer>
+        <NextPageButton disabled={page === 1} onClick={handleDecrementPage}>
+          Anterior
+        </NextPageButton>
+        <NextPageButton
+          disabled={isFinalPageReached}
+          onClick={handleIncrementPage}
+        >
+          Próximo
+        </NextPageButton>
+      </NextPageButtonContainer>
     </Container>
   );
 };

@@ -15,6 +15,7 @@ interface SelectActive {
 export const Container = styled.div`
   padding: 2rem;
   background: var(--white);
+  border-radius: 0.2rem;
 `;
 
 export const FilterTypesContainer = styled.div`
@@ -114,4 +115,39 @@ export const ItemContainer = styled.div<GridActiveProps>`
       ? 'repeat(auto-fit, 350px)'
       : 'repeat(1, auto)'};
   `};
+`;
+
+export const NextPageButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+
+  padding: 0.5rem;
+`;
+export const NextPageButton = styled.button`
+  flex: 1;
+  max-width: 720px;
+  min-width: 240px;
+  margin-top: 4rem;
+  height: 4rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--blue);
+  background: var(--blue-light);
+  color: var(--white);
+  transition: filter 0.9s;
+
+  & + button {
+    margin-left: 0.5rem;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    border: 1px solid var(--gray);
+    background: var(--gray-light);
+    color: var(--black);
+  }
+
+  &:hover:not(:disabled) {
+    filter: brightness(0.9);
+  }
 `;

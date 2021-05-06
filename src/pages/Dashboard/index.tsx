@@ -38,6 +38,7 @@ export const Dashboard: React.FC = () => {
   const [optionActive, setOptionActive] = useState('Todos');
   const [token, setToken] = useState<string>();
   const [isGridActive, setIsGridActive] = useState(true);
+  const [isInputActive, setIsInputActive] = useState(false);
 
   useEffect(() => {
     function loadToken() {
@@ -67,7 +68,7 @@ export const Dashboard: React.FC = () => {
         setBloxesFiltered(JSON.parse(bloxesStored));
       } else {
         api
-          .get('/bloxes', {
+          .get('/bloxes?per=8&page=1', {
             headers: {
               Authorization: token,
             },
@@ -161,6 +162,7 @@ export const Dashboard: React.FC = () => {
     (value: string | number) => {
       if (value === '') {
         setBloxesFiltered(bloxes);
+        setIsInputActive(false);
       } else {
         const bloxesTilteredByIdOrTitle = bloxes?.filter(
           item =>
@@ -169,6 +171,8 @@ export const Dashboard: React.FC = () => {
         );
 
         setBloxesFiltered(bloxesTilteredByIdOrTitle);
+        setIsInputActive(true);
+        setOptionActive('Todos');
       }
     },
     [bloxes]
@@ -179,12 +183,14 @@ export const Dashboard: React.FC = () => {
       <FilterTypesContainer>
         <FilterTypeText>{optionActive}</FilterTypeText>
 
-        <FilterContainer>
-          <FilterInputContainer>
+        <FilterContainer isSelectActive={optionActive !== 'Todos'}>
+          <FilterInputContainer isInputActive={isInputActive}>
             <input
               type="text"
               placeholder="Título ou ID"
-              onChange={e => handleFilterByTitleOrId(e.target.value)}
+              onChange={e => {
+                handleFilterByTitleOrId(e.target.value);
+              }}
             />
             <FiSearch size={24} />
           </FilterInputContainer>

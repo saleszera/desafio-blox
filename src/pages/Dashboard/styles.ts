@@ -4,6 +4,14 @@ interface GridActiveProps {
   isGridActive: boolean;
 }
 
+interface InputActiveProps {
+  isInputActive: boolean;
+}
+
+interface SelectActive {
+  isSelectActive: boolean;
+}
+
 export const Container = styled.div`
   padding: 2rem;
   background: var(--white);
@@ -18,7 +26,7 @@ export const FilterTypesContainer = styled.div`
 export const FilterTypeText = styled.h2`
   color: var(--black);
 `;
-export const FilterContainer = styled.div`
+export const FilterContainer = styled.div<SelectActive>`
   display: flex;
   flex-direction: row;
 
@@ -27,25 +35,37 @@ export const FilterContainer = styled.div`
     width: 20rem;
     background: var(--white);
     border: 0;
-    border-bottom: 1px solid var(--gray);
     color: var(--gray);
     font-size: 1.125rem;
     padding: 0.5rem;
+    margin-left: 1rem;
+
+    ${({ isSelectActive }) => css`
+      border-bottom: ${isSelectActive
+        ? '1px solid var(--blue)'
+        : '1px solid var(--gray)'};
+    `}
   }
 `;
-export const FilterInputContainer = styled.div`
+export const FilterInputContainer = styled.div<InputActiveProps>`
   margin-right: 0.5rem;
   background: var(--white);
   color: var(--gray);
-  border-bottom: 1px solid var(--gray);
   transition: border-bottom 0.9s, color 0.9s;
+  border-bottom: 1px solid var(--gray);
+
+  ${({ isInputActive }) => css`
+    border-bottom: ${isInputActive
+      ? '1px solid var(--blue)'
+      : '1px solid var(--gray)'};
+
+    svg {
+      color: ${isInputActive ? 'var(--blue)' : 'var(--gray)'};
+    }
+  `}
 
   input {
     border: none;
-  }
-
-  svg {
-    color: var(--gray);
   }
 
   &:hover {

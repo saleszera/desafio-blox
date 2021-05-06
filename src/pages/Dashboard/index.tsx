@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { FiSearch, FiGrid, FiList } from 'react-icons/fi';
-import axios from 'axios';
 
 import {
   Container,
@@ -12,6 +11,7 @@ import {
   ItemContainer,
 } from './styles';
 import { Card } from '../../components/Card';
+import { api } from '../../services/api';
 
 interface Responsibles {
   name: string;
@@ -33,55 +33,76 @@ interface Bloxe {
 
 export const Dashboard: React.FC = () => {
   const [bloxes, setBloxes] = useState<Bloxe[]>();
+  const [token, setToken] = useState<string>();
   const [isGridActive, setIsGridActive] = useState(true);
 
   useEffect(() => {
-    function loadData() {
-      axios
-        .post('https://api-dev.plataformablox.com.br/api/token', {
-          username: 'integratorTeste',
-          password: '12345',
-          institution_id: 22,
-        })
-        .then(({ data: tokenData }) => {
-          axios
-            .get('https://api-dev.plataformablox.com.br/api/bloxes', {
-              headers: {
-                Authorization: tokenData.token,
-              },
-            })
-            .then(({ data: bloxesData }) => {
-              const bloxesFormatted = bloxesData.map((item: Bloxe) => {
-                return {
-                  ...item,
-                  date_limit_edition: item.date_limit_edition
-                    ? new Date(item.date_limit_edition).toLocaleDateString(
-                        'pt-BR',
-                        {
-                          day: '2-digit',
-                          month: 'long',
-                          year: 'numeric',
-                        }
-                      )
-                    : 'Sem data limite',
-                  knowledge_area: {
-                    ...item.knowledge_area,
-                    icon_url: item.knowledge_area.icon_url
-                      ? item.knowledge_area.icon_url
-                      : 'https://images.unsplash.com/photo-1520004434532-668416a08753?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-                  },
-                };
-              });
+    function loadToken() {
+      const userTokenStored = localStorage.getItem('@desafioBlox:token');
 
-              // console.log(bloxesData);
-
-              setBloxes(bloxesFormatted);
-            });
-        });
+      if (userTokenStored) {
+        setToken(userTokenStored);
+      } else {
+        api
+          .post('/token', {
+            username: 'integratorTeste',
+            password: '12345',
+            institution_id: 22,
+          })
+          .then(({ data: tokenData }) => {
+            setToken(tokenData.token);
+            localStorage.setItem('@desafioBlox:token', tokenData.token);
+          });
+      }
     }
 
+    function loadData() {
+      const bloxesStored = localStorage.getItem('@desafioBlox:bloxes');
+
+      if (bloxesStored) {
+        setBloxes(JSON.parse(bloxesStored));
+      } else {
+        api
+          .get('/bloxes', {
+            headers: {
+              Authorization: token,
+            },
+          })
+          .then(({ data: bloxesData }) => {
+            const bloxesFormatted = bloxesData.map((item: Bloxe) => {
+              return {
+                ...item,
+                date_limit_edition: item.date_limit_edition
+                  ? new Date(item.date_limit_edition).toLocaleDateString(
+                      'pt-BR',
+                      {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric',
+                      }
+                    )
+                  : 'Sem data limite',
+                knowledge_area: {
+                  ...item.knowledge_area,
+                  icon_url: item.knowledge_area.icon_url
+                    ? item.knowledge_area.icon_url
+                    : 'https://images.unsplash.com/photo-1520004434532-668416a08753?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                },
+              };
+            });
+
+            setBloxes(bloxesFormatted);
+            localStorage.setItem(
+              '@desafioBlox:bloxes',
+              JSON.stringify(bloxesFormatted)
+            );
+          });
+      }
+    }
+
+    loadToken();
     loadData();
-  }, []);
+  }, [token]);
 
   return (
     <Container>

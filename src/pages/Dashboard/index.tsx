@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FiSearch, FiGrid, FiList } from 'react-icons/fi';
 
 import {
@@ -108,7 +108,7 @@ export const Dashboard: React.FC = () => {
     loadData();
   }, [token]);
 
-  const handleFilter = useCallback(
+  const handleFilterByStatus = useCallback(
     (option: string) => {
       if (option === 'all') {
         setBloxesFiltered(bloxes);
@@ -122,6 +122,23 @@ export const Dashboard: React.FC = () => {
     [bloxes]
   );
 
+  const handleFilterByTitleOrId = useCallback(
+    (value: string | number) => {
+      if (value === '') {
+        setBloxesFiltered(bloxes);
+      } else {
+        const bloxesTilteredByIdOrTitle = bloxes?.filter(
+          item =>
+            item.title.toUpperCase().includes(String(value).toUpperCase()) ||
+            String(item.blox_profile.id).includes(String(value))
+        );
+
+        setBloxesFiltered(bloxesTilteredByIdOrTitle);
+      }
+    },
+    [bloxes]
+  );
+
   return (
     <Container>
       <FilterTypesContainer>
@@ -129,11 +146,18 @@ export const Dashboard: React.FC = () => {
 
         <FilterContainer>
           <FilterInputContainer>
-            <input type="text" placeholder="Título ou ID" />
+            <input
+              type="text"
+              placeholder="Título ou ID"
+              onChange={e => handleFilterByTitleOrId(e.target.value)}
+            />
             <FiSearch size={24} />
           </FilterInputContainer>
 
-          <select id="status" onChange={e => handleFilter(e.target.value)}>
+          <select
+            id="status"
+            onChange={e => handleFilterByStatus(e.target.value)}
+          >
             <option value="default" hidden>
               Filtrar
             </option>

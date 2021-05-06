@@ -40,20 +40,20 @@ export const FilterInputContainer = styled.div`
   border-bottom: 1px solid var(--gray);
   transition: border-bottom 0.9s, color 0.9s;
 
-  &:hover {
-    border-bottom: 1px solid var(--blue);
-
-    svg {
-      color: var(--blue);
-    }
-  }
-
   input {
     border: none;
   }
 
   svg {
     color: var(--gray);
+  }
+
+  &:hover {
+    border-bottom: 1px solid var(--blue);
+
+    svg {
+      color: var(--blue);
+    }
   }
 `;
 

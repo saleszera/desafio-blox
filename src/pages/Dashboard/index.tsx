@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FiSearch, FiGrid, FiList } from 'react-icons/fi';
 
 import {
@@ -29,10 +29,12 @@ interface Bloxe {
     icon_url: string;
   };
   responsibles: [{ name: Responsibles[] | string | null | undefined }];
+  status: string;
 }
 
 export const Dashboard: React.FC = () => {
   const [bloxes, setBloxes] = useState<Bloxe[]>();
+  const [bloxesFiltered, setBloxesFiltered] = useState<Bloxe[]>();
   const [token, setToken] = useState<string>();
   const [isGridActive, setIsGridActive] = useState(true);
 
@@ -61,6 +63,7 @@ export const Dashboard: React.FC = () => {
 
       if (bloxesStored) {
         setBloxes(JSON.parse(bloxesStored));
+        setBloxesFiltered(JSON.parse(bloxesStored));
       } else {
         api
           .get('/bloxes', {
@@ -92,6 +95,7 @@ export const Dashboard: React.FC = () => {
             });
 
             setBloxes(bloxesFormatted);
+            setBloxesFiltered(bloxesFormatted);
             localStorage.setItem(
               '@desafioBlox:bloxes',
               JSON.stringify(bloxesFormatted)
@@ -104,6 +108,20 @@ export const Dashboard: React.FC = () => {
     loadData();
   }, [token]);
 
+  const handleFilter = useCallback(
+    (option: string) => {
+      if (option === 'all') {
+        setBloxesFiltered(bloxes);
+      } else {
+        const bloxesFilteresByStatus = bloxes?.filter(
+          item => item.status === option
+        );
+        setBloxesFiltered(bloxesFilteresByStatus);
+      }
+    },
+    [bloxes]
+  );
+
   return (
     <Container>
       <FilterTypesContainer>
@@ -115,14 +133,15 @@ export const Dashboard: React.FC = () => {
             <FiSearch size={24} />
           </FilterInputContainer>
 
-          <select id="status">
-            <option value="" disabled selected hidden>
+          <select id="status" onChange={e => handleFilter(e.target.value)}>
+            <option value="default" hidden>
               Filtrar
             </option>
-            <option value="aberto">Aberto para edição</option>
-            <option value="aguardando">Aguardando revisão</option>
-            <option value="aprovado">Aprovado</option>
-            <option value="arquivodos">Arquivados</option>
+            <option value="all">Todos</option>
+            <option value="pending">Aberto para edição</option>
+            <option value="review">Aguardando revisão</option>
+            <option value="accepted">Aprovado</option>
+            <option value="archived">Arquivados</option>
           </select>
         </FilterContainer>
       </FilterTypesContainer>
@@ -146,7 +165,8 @@ export const Dashboard: React.FC = () => {
       </ItemsOrderContainer>
 
       <ItemContainer isGridActive={isGridActive}>
-        {bloxes && bloxes.map(item => <Card key={item.title} bloxe={item} />)}
+        {bloxesFiltered &&
+          bloxesFiltered.map(item => <Card key={item.title} bloxe={item} />)}
       </ItemContainer>
     </Container>
   );

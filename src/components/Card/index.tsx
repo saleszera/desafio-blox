@@ -29,6 +29,7 @@ interface Bloxe {
     icon_url: string;
   };
   responsibles: [{ name: Responsibles[] | string | null | undefined }];
+  status: string;
 }
 
 interface CardProps {

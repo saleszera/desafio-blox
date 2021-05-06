@@ -1,4 +1,8 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
+interface GridActiveProps {
+  isGridActive: boolean;
+}
 
 export const Container = styled.div`
   padding: 2rem;
@@ -55,25 +59,23 @@ export const FilterInputContainer = styled.div`
 
 export const ItemsOrderContainer = styled.div`
   display: flex;
-`;
 
-export const ItemsOrderButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--white);
-  border: none;
-  border-radius: 0.2rem;
-  margin-right: 0.5rem;
-  width: 36px;
-  transition: filter 0.9s, color 0.9s;
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    border: none;
+    border-radius: 0.2rem;
+    margin-right: 0.5rem;
+    width: 36px;
 
-  svg {
-    color: var(--gray);
+    svg {
+      color: var(--gray);
+    }
   }
-
-  &:active {
-    filter: brightness(0.9);
+  .active {
+    background: #f8f8f8;
 
     svg {
       color: var(--blue);
@@ -81,9 +83,15 @@ export const ItemsOrderButton = styled.button`
   }
 `;
 
-export const ItemContainer = styled.div`
+export const ItemContainer = styled.div<GridActiveProps>`
+  margin-top: 4rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, 350px);
-  grid-gap: 1rem;
+  grid-gap: 2rem;
   justify-content: center;
+
+  ${({ isGridActive }) => css`
+    grid-template-columns: ${isGridActive
+      ? 'repeat(auto-fit, 350px)'
+      : 'repeat(1, auto)'};
+  `};
 `;

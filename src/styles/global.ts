@@ -14,14 +14,6 @@ export default createGlobalStyle`
     --gray-light: #d2d2d2;
     --white: #ffff;
     --blue: #5f8afc;
-    --cyan-dark: #69acdb;
-    --cyan-light: #75c1e2;
-    --yellow-dark: #ead558;
-    --yellow-light: #eedf76;
-    --green-dark: #72b356;
-    --green-ligh: #7fbe5c;
-    --red-dark: #b61f30;
-    --red-light: #d72636;
   }
 
   #root {

@@ -45,7 +45,8 @@
     "prettier/prettier": "error",
     "no-tabs": ["error", { "allowIndentationTabs": true }],
     "react/require-default-props": "off",
-    "react/prefer-stateless-function": "off"
+    "react/prefer-stateless-function": "off",
+    "camelcase": "off"
   },
   "settings": {
     "import/resolver": {

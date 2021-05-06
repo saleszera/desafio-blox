@@ -1,26 +1,46 @@
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
+
+interface CardsProps {
+  color1?: string;
+  color2?: string;
+}
+
+const floatingCard = keyframes`
+    to{
+      transform: scale(1.1);
+      box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+      0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
+      0 10.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+      0 50px 80px rgba(0, 0, 0, 0.12);
+  }
+`;
 
 export const Container = styled.div`
-  margin-top: 4rem;
-  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
-    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
-    0 10.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
-    0 50px 80px rgba(0, 0, 0, 0.12);
+  &:hover {
+    animation: ${floatingCard} 0.9s ease-in-out forwards;
+  }
 `;
-export const Header = styled.header`
+export const Header = styled.header<CardsProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   padding: 0.5rem 2rem;
-  background: var(--yellow-light);
   border-radius: 0.2rem 0.2rem 0 0;
+  ${({ color1 }) => css`
+    background: ${color1};
+  `}
 `;
-export const Main = styled.main`
+export const Main = styled.main<CardsProps>`
   display: flex;
   align-items: center;
+
   padding: 0.5rem 2rem;
-  background: var(--yellow-dark);
+  height: 200px;
+
+  ${({ color2 }) => css`
+    background: ${color2};
+  `}
 
   strong {
     padding: 2rem;
@@ -52,8 +72,13 @@ export const IDContainer = styled.div`
 export const ModalityContainer = styled.div`
   text-align: center;
 `;
-export const Footer = styled.footer`
+export const Footer = styled.footer<CardsProps>`
   padding: 0.5rem 2rem;
-  background: var(--yellow-light);
   border-radius: 0 0 0.2rem 0.2rem;
+  text-align: center;
+  height: 60px;
+
+  ${({ color1 }) => css`
+    background: ${color1};
+  `}
 `;

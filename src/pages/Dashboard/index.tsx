@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FiSearch, FiGrid, FiList } from 'react-icons/fi';
 
 import {
@@ -35,6 +35,7 @@ interface Bloxe {
 export const Dashboard: React.FC = () => {
   const [bloxes, setBloxes] = useState<Bloxe[]>();
   const [bloxesFiltered, setBloxesFiltered] = useState<Bloxe[]>();
+  const [optionActive, setOptionActive] = useState('Todos');
   const [token, setToken] = useState<string>();
   const [isGridActive, setIsGridActive] = useState(true);
 
@@ -110,13 +111,47 @@ export const Dashboard: React.FC = () => {
 
   const handleFilterByStatus = useCallback(
     (option: string) => {
-      if (option === 'all') {
-        setBloxesFiltered(bloxes);
-      } else {
-        const bloxesFilteresByStatus = bloxes?.filter(
-          item => item.status === option
-        );
-        setBloxesFiltered(bloxesFilteresByStatus);
+      switch (option) {
+        case 'pending': {
+          const bloxesFilteredByStatus = bloxes?.filter(
+            item => item.status === 'pending'
+          );
+
+          setBloxesFiltered(bloxesFilteredByStatus);
+          setOptionActive('Pendente');
+          break;
+        }
+        case 'review': {
+          const bloxesFilteredByStatus = bloxes?.filter(
+            item => item.status === 'review'
+          );
+
+          setBloxesFiltered(bloxesFilteredByStatus);
+          setOptionActive('Revisão');
+          break;
+        }
+        case 'accepted': {
+          const bloxesFilteredByStatus = bloxes?.filter(
+            item => item.status === 'accepted'
+          );
+
+          setBloxesFiltered(bloxesFilteredByStatus);
+          setOptionActive('Aprovado');
+          break;
+        }
+        case 'archived': {
+          const bloxesFilteredByStatus = bloxes?.filter(
+            item => item.status === 'archived'
+          );
+
+          setBloxesFiltered(bloxesFilteredByStatus);
+          setOptionActive('Arquivado');
+          break;
+        }
+        default:
+          setBloxesFiltered(bloxes);
+          setOptionActive('Todos');
+          break;
       }
     },
     [bloxes]
@@ -142,7 +177,7 @@ export const Dashboard: React.FC = () => {
   return (
     <Container>
       <FilterTypesContainer>
-        <FilterTypeText>Arquivados</FilterTypeText>
+        <FilterTypeText>{optionActive}</FilterTypeText>
 
         <FilterContainer>
           <FilterInputContainer>

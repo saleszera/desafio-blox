@@ -12,6 +12,10 @@ interface SelectActive {
   isSelectActive: boolean;
 }
 
+interface NextPageButtonProps {
+  isLoading: boolean;
+}
+
 export const Container = styled.div`
   padding: 2rem;
   background: var(--white);
@@ -124,7 +128,7 @@ export const NextPageButtonContainer = styled.div`
 
   padding: 0.5rem;
 `;
-export const NextPageButton = styled.button`
+export const NextPageButton = styled.button<NextPageButtonProps>`
   flex: 1;
   max-width: 720px;
   min-width: 240px;
@@ -142,9 +146,11 @@ export const NextPageButton = styled.button`
 
   &:disabled {
     cursor: not-allowed;
-    border: 1px solid var(--gray);
-    background: var(--gray-light);
-    color: var(--black);
+    ${({ isLoading }) => css`
+      border: ${!isLoading && '1px solid var(--gray)'};
+      background: ${!isLoading && 'var(--gray-light)'};
+      color: ${!isLoading && 'var(--black);'};
+    `}
   }
 
   &:hover:not(:disabled) {

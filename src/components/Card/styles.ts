@@ -1,8 +1,7 @@
 import styled, { css, keyframes } from 'styled-components';
 
 interface CardsProps {
-  color1?: string;
-  color2?: string;
+  backgroundColor: string;
 }
 
 const floatingCard = keyframes`
@@ -15,7 +14,10 @@ const floatingCard = keyframes`
   }
 `;
 
-export const Container = styled.div`
+export const Container = styled.button`
+  border: none;
+  color: var(--white);
+
   &:hover {
     animation: ${floatingCard} 0.9s ease-in-out forwards;
   }
@@ -27,9 +29,13 @@ export const Header = styled.header<CardsProps>`
 
   padding: 0.5rem 2rem;
   border-radius: 0.2rem 0.2rem 0 0;
-  ${({ color1 }) => css`
-    background: ${color1};
+  ${({ backgroundColor }) => css`
+    background: ${backgroundColor};
   `}
+
+  div {
+    text-align: justify;
+  }
 `;
 export const Main = styled.main<CardsProps>`
   display: flex;
@@ -38,8 +44,8 @@ export const Main = styled.main<CardsProps>`
   padding: 0.5rem 2rem;
   height: 200px;
 
-  ${({ color2 }) => css`
-    background: ${color2};
+  ${({ backgroundColor }) => css`
+    background: ${backgroundColor};
   `}
 
   strong {
@@ -63,7 +69,7 @@ export const Details = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 1rem;
+  margin-top: 2rem;
 `;
 export const IDContainer = styled.div`
   margin-right: 1rem;
@@ -78,7 +84,11 @@ export const Footer = styled.footer<CardsProps>`
   text-align: center;
   height: 60px;
 
-  ${({ color1 }) => css`
-    background: ${color1};
+  ${({ backgroundColor }) => css`
+    background: ${backgroundColor};
   `}
+
+  p {
+    text-align: justify;
+  }
 `;

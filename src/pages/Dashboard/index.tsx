@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import Modal from 'react-modal';
 import { FiSearch, FiGrid, FiList } from 'react-icons/fi';
 
 import {
@@ -13,12 +14,12 @@ import {
   NextPageButton,
 } from './styles';
 import { Card } from '../../components/Card';
+import { LoadingCard } from '../../components/shimmer/LoadingCard';
+import { DetailsModal } from '../../components/DetailsModal';
 import { api } from '../../services/api';
 
-interface Responsibles {
-  name: string;
-}
 interface Bloxe {
+  id: number;
   date_limit_edition: string;
   title: string;
   blox_profile: {
@@ -28,21 +29,48 @@ interface Bloxe {
   knowledge_area: {
     color1: string;
     color2: string;
-    icon_url: string;
+    icon_url: string | null;
+    name: string;
   };
-  responsibles: [{ name: Responsibles[] | string | null | undefined }];
+  responsibles: [{ name: string[] | string | null | undefined }];
   status: string;
+  functional_area: {
+    name: string;
+  };
+  competences: [
+    {
+      name: string;
+    }
+  ];
+  hours: number;
 }
+
+Modal.setAppElement('#root');
 
 export const Dashboard: React.FC = () => {
   const [bloxes, setBloxes] = useState<Bloxe[]>();
   const [bloxesFiltered, setBloxesFiltered] = useState<Bloxe[]>();
+  const [showDetails, setShowDetails] = useState<Bloxe>();
   const [optionActive, setOptionActive] = useState('Todos');
   const [token, setToken] = useState<string>();
   const [page, setPage] = useState(1);
   const [isGridActive, setIsGridActive] = useState(true);
   const [isInputActive, setIsInputActive] = useState(false);
   const [isFinalPageReached, setIsFinalPageReached] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+
+  function handleOpenNewDetailsModal(bloxe: Bloxe) {
+    setIsDetailsModalOpen(true);
+    setShowDetails(bloxe);
+    document.body.style.overflow = 'hidden';
+  }
+
+  function handleCloseNewDetailsModal() {
+    setIsDetailsModalOpen(false);
+
+    document.body.style.overflow = 'auto';
+  }
 
   useEffect(() => {
     function loadToken() {
@@ -65,60 +93,44 @@ export const Dashboard: React.FC = () => {
     }
 
     function loadData() {
-      const bloxesStored = localStorage.getItem('@desafioBlox:bloxes');
+      setIsLoading(true);
 
-      if (bloxesStored && page === 1) {
-        setBloxes(JSON.parse(bloxesStored));
-        setBloxesFiltered(JSON.parse(bloxesStored));
-      } else {
-        api
-          .get(`/bloxes?per=8&page=${page}`, {
-            headers: {
-              Authorization: token,
-            },
-          })
-          .then(({ data: bloxesData }) => {
-            if (bloxesData.length === 0) {
-              setIsFinalPageReached(true);
-            } else {
-              const bloxesFormatted = bloxesData.map((item: Bloxe) => {
-                return {
-                  ...item,
-                  date_limit_edition: item.date_limit_edition
-                    ? new Date(item.date_limit_edition).toLocaleDateString(
-                        'pt-BR',
-                        {
-                          day: '2-digit',
-                          month: 'long',
-                          year: 'numeric',
-                        }
-                      )
-                    : 'Sem data limite',
-                  knowledge_area: {
-                    ...item.knowledge_area,
-                    icon_url: item.knowledge_area.icon_url
-                      ? item.knowledge_area.icon_url
-                      : 'https://images.unsplash.com/photo-1520004434532-668416a08753?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-                  },
-                };
-              });
-
-              setBloxes(bloxesFormatted);
-              setBloxesFiltered(bloxesFormatted);
-              setIsFinalPageReached(false);
-
-              if (page === 1) {
-                localStorage.setItem(
-                  '@desafioBlox:bloxes',
-                  JSON.stringify(bloxesFormatted)
-                );
-              }
-            }
-          })
-          .catch(() => {
-            loadToken();
-          });
-      }
+      api
+        .get(`/bloxes?per=3&page=${page}`, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then(({ data: bloxesData }) => {
+          if (bloxesData.length === 0) {
+            setIsFinalPageReached(true);
+            setIsLoading(false);
+          } else {
+            const bloxesFormatted = bloxesData.map((item: Bloxe) => {
+              return {
+                ...item,
+                date_limit_edition: item.date_limit_edition
+                  ? new Date(item.date_limit_edition).toLocaleDateString(
+                      'pt-BR',
+                      {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric',
+                      }
+                    )
+                  : 'Sem data limite',
+              };
+            });
+            setBloxes(bloxesFormatted);
+            setBloxesFiltered(bloxesFormatted);
+            setIsFinalPageReached(false);
+            setIsLoading(false);
+            console.log(bloxesFormatted);
+          }
+        })
+        .catch(() => {
+          loadToken();
+        });
     }
 
     loadData();
@@ -194,80 +206,105 @@ export const Dashboard: React.FC = () => {
 
   const handleIncrementPage = useCallback(() => {
     setPage(oldState => oldState + 1);
+    window.location.href = '#';
   }, []);
 
-  const handleDecrementPage = useCallback(
-    () => page > 1 && setPage(oldState => oldState - 1),
-    [page]
-  );
+  const handleDecrementPage = useCallback(() => {
+    if (page > 1) setPage(oldState => oldState - 1);
+    window.location.href = '#';
+  }, [page]);
 
   return (
-    <Container>
-      <FilterTypesContainer>
-        <FilterTypeText>{optionActive}</FilterTypeText>
+    <>
+      <DetailsModal
+        OnRequestClose={handleCloseNewDetailsModal}
+        isOpen={isDetailsModalOpen}
+        bloxeDetail={showDetails}
+      />
 
-        <FilterContainer isSelectActive={optionActive !== 'Todos'}>
-          <FilterInputContainer isInputActive={isInputActive}>
-            <input
-              type="text"
-              placeholder="Título ou ID"
-              onChange={e => {
-                handleFilterByTitleOrId(e.target.value);
-              }}
-            />
-            <FiSearch size={24} />
-          </FilterInputContainer>
+      <Container>
+        <FilterTypesContainer>
+          <FilterTypeText>{optionActive}</FilterTypeText>
 
-          <select
-            id="status"
-            onChange={e => handleFilterByStatus(e.target.value)}
+          <FilterContainer isSelectActive={optionActive !== 'Todos'}>
+            <FilterInputContainer isInputActive={isInputActive}>
+              <input
+                type="text"
+                placeholder="Título ou ID"
+                onChange={e => {
+                  handleFilterByTitleOrId(e.target.value);
+                }}
+              />
+              <FiSearch size={24} />
+            </FilterInputContainer>
+
+            <select
+              id="status"
+              onChange={e => handleFilterByStatus(e.target.value)}
+            >
+              <option value="default" hidden>
+                Filtrar
+              </option>
+              <option value="all">Todos</option>
+              <option value="pending">Aberto para edição</option>
+              <option value="review">Aguardando revisão</option>
+              <option value="accepted">Aprovado</option>
+              <option value="archived">Arquivados</option>
+            </select>
+          </FilterContainer>
+        </FilterTypesContainer>
+
+        <ItemsOrderContainer>
+          <button
+            type="button"
+            className={isGridActive ? 'active' : ''}
+            onClick={() => setIsGridActive(true)}
           >
-            <option value="default" hidden>
-              Filtrar
-            </option>
-            <option value="all">Todos</option>
-            <option value="pending">Aberto para edição</option>
-            <option value="review">Aguardando revisão</option>
-            <option value="accepted">Aprovado</option>
-            <option value="archived">Arquivados</option>
-          </select>
-        </FilterContainer>
-      </FilterTypesContainer>
+            <FiGrid size={24} />
+          </button>
 
-      <ItemsOrderContainer>
-        <button
-          type="button"
-          className={isGridActive ? 'active' : ''}
-          onClick={() => setIsGridActive(true)}
-        >
-          <FiGrid size={24} />
-        </button>
+          <button
+            type="button"
+            className={!isGridActive ? 'active' : ''}
+            onClick={() => setIsGridActive(false)}
+          >
+            <FiList size={24} />
+          </button>
+        </ItemsOrderContainer>
 
-        <button
-          type="button"
-          className={!isGridActive ? 'active' : ''}
-          onClick={() => setIsGridActive(false)}
-        >
-          <FiList size={24} />
-        </button>
-      </ItemsOrderContainer>
+        <ItemContainer isGridActive={isGridActive}>
+          {isLoading ? (
+            <>
+              <LoadingCard />
+            </>
+          ) : (
+            bloxesFiltered?.map(item => (
+              <Card
+                key={item.id}
+                bloxe={item}
+                onClick={() => handleOpenNewDetailsModal(item)}
+              />
+            ))
+          )}
+        </ItemContainer>
 
-      <ItemContainer isGridActive={isGridActive}>
-        {bloxesFiltered &&
-          bloxesFiltered.map(item => <Card key={item.title} bloxe={item} />)}
-      </ItemContainer>
-
-      <NextPageButtonContainer>
-        <NextPageButton disabled={page === 1} onClick={handleDecrementPage}>
-          Anterior
-        </NextPageButton>
-        <NextPageButton
-          disabled={isFinalPageReached}
-          onClick={handleIncrementPage}
-        >
-          Próximo
-        </NextPageButton>
-      </NextPageButtonContainer>
-    </Container>
+        <NextPageButtonContainer>
+          <NextPageButton
+            isLoading={isLoading}
+            disabled={page === 1 || isLoading}
+            onClick={handleDecrementPage}
+          >
+            Anterior
+          </NextPageButton>
+          <NextPageButton
+            isLoading={isLoading}
+            disabled={isFinalPageReached || isLoading}
+            onClick={handleIncrementPage}
+          >
+            Próximo
+          </NextPageButton>
+        </NextPageButtonContainer>
+      </Container>
+    </>
   );
 };

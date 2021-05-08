@@ -46,7 +46,8 @@
     "no-tabs": ["error", { "allowIndentationTabs": true }],
     "react/require-default-props": "off",
     "react/prefer-stateless-function": "off",
-    "camelcase": "off"
+    "camelcase": "off",
+    "react/jsx-props-no-spreading": "off"
   },
   "settings": {
     "import/resolver": {

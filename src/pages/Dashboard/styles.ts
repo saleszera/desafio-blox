@@ -83,6 +83,10 @@ export const OrderButtonContainer = styled.div`
       color: var(--blue);
     }
   }
+
+  @media (max-width: 873px) {
+    display: none;
+  }
 `;
 
 export const ItemContainer = styled.div<GridActiveProps>`

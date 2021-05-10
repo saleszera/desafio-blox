@@ -1,46 +1,116 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
 
-In the project directory, you can run:
+<div  align="center">	
+	<h1>Gerenciador Unidades Curriculares</h1>
+</div>
 
-### `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<p  align="center">
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+<a  href="#-sobre-o-projeto">Sobre</a> •
 
-### `yarn test`
+<a  href="#%EF%B8%8F-funcionalidades">Funcionalidades</a> •
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<a  href="#-como-executar-o-projeto">Como executar</a> •
 
-### `yarn build`
+<a  href="#-tecnologias">Tecnologias</a> •
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<a  href="#%EF%B8%8F-captura-de-tela">Captura de tela</a> •
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+</p>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 💻 Sobre o projeto
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Gerenciador Unidades Curriculares é o resultado do desfio proposto pela EdTech Blox. A aplicação consome uma API e lista as unidades curriculares.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## ⚙️ Funcionalidades
+
+O usuário pode:
+- [x] Alterar a forma como a listagem é exibida
+- [x] Pesquisa por título ou ID
+- [x] Filtrar por status
+- [x] Avançar páginas
+- [x] Ver detalhes de uma unidade curricular
+
+---
+
+## 🚀 Como executar o projeto
+
+### Pré-requisitos
+
+Antes de começar, você vai precisar das seguintes ferramentas:
+
+- **[Git](https://git-scm.com)**
+- **[Yarn](https://yarnpkg.com/getting-started/install)**
+- **[NodeJs](https://nodejs.org/en/)**
+Além disto é bom ter um editor para trabalhar com o código como [VSCode](https://code.visualstudio.com/)
+
+### 🧭 Rodando a aplicação
+
+```bash
+# Clone este repositório
+$ git clone https://github.com/saleszera/desafio-blox
+
+# Acesse a pasta do projeto no seu terminal/cmd
+$ cd desafio-blox
+
+# Instale as dependências
+$ yarn
+```
+#### Importante
+Após a instalação das dependências, crie na raiz da aplicação o `.env`, neste arquivo cole o conteúdo do `.env.example`. As variáveis devem ser preenchidas da seguinte forma:
+```plaintext
+REACT_APP_API_URL=https://api-dev.plataformablox.com.br/api
+REACT_APP_API_USERNAME=Usuário valido, exemplo: integratorTeste
+REACT_APP_API_PASSWORD=Senha valido, exemplo: 12345
+REACT_APP_API_INSTITUTION_ID=ID da instituição, exemplo: 22
+```
+Após o correto preenchimento do `.env` execute `yarn start` para executar a aplicação.
+
+## 🛠 Tecnologias
+
+
+As seguintes ferramentas foram utilizadas na construção do projeto:
+
+
+- **[ReactJS](https://pt-br.reactjs.org/docs/getting-started.html) + [TypeScript](https://www.typescriptlang.org/)** - O typescript foi utilizado pensando em futuras manutenções. Com a tipagem fica fácil saber oque uma função recebe e retorna.
+- **[React-modal](https://github.com/reactjs/react-modal)** - Para a criação de modais.
+- **[React-icons](https://github.com/react-icons/react-icons)** - Os ícones utilizados fazem parte do pacote feather.
+- **[React Hooks](https://pt-br.reactjs.org/docs/hooks-intro.html)** - Os hooks utilizados foram:
+  - useState;
+  - useEffect;
+  - useContext;
+  - useCallback;
+- **[axios](https://github.com/axios/axios)** - Para chamadas a API.
+- **[styled-components](https://styled-components.com/docs/basics)**
+
+> Veja o arquivo [package.json](https://github.com/saleszera/desafio-blox/blob/main/package.json)
+
+
+#### **Utilitários**
+
+- Editor: **[Visual Studio Code](https://code.visualstudio.com/)** → Extensions: **[EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)**
+
+- Linting: **[EsLint](https://eslint.org/docs/user-guide/getting-started)** + **[Prettier](https://prettier.io/)**
+
+- Markdown: **[StackEdit](https://stackedit.io/)**
+
+---
+### 🎥️ Captura de tela
+  <div align="center"  >
+	  <img src="https://media.giphy.com/media/pMLNVLlkCPB7dZMR9D/giphy.gif"/>
+  </div>  
+
+---
+
+Feito com ❤️ por Raniery Sales 👋🏽 [Entre em contato!](https://www.linkedin.com/in/raniery-sales/)
+
+---

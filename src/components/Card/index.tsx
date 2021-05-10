@@ -1,6 +1,8 @@
 import React, { ButtonHTMLAttributes } from 'react';
 import { FiCheck } from 'react-icons/fi';
+
 import Hexagon from '../Hexagon';
+import { Bloxe } from '../../pages/Dashboard';
 
 import {
   Container,
@@ -12,22 +14,6 @@ import {
   ModalityContainer,
   Footer,
 } from './styles';
-
-interface Bloxe {
-  date_limit_edition: string;
-  title: string;
-  blox_profile: {
-    id: number;
-  };
-  modality: string;
-  knowledge_area: {
-    color1: string;
-    color2: string;
-    icon_url: string | null;
-  };
-  responsibles: [{ name: string[] | string | null | undefined }];
-  status: string;
-}
 
 interface CardProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   bloxe: Bloxe;

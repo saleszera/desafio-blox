@@ -47,7 +47,8 @@
     "react/require-default-props": "off",
     "react/prefer-stateless-function": "off",
     "camelcase": "off",
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "react/prop-types": "off"
   },
   "settings": {
     "import/resolver": {

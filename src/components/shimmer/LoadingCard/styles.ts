@@ -90,7 +90,7 @@ export const Footer = styled.footer`
   border-radius: 0 0 0.2rem 0.2rem;
   text-align: center;
   height: 5rem;
-  background: #f8f8f8;
+  background: var(--gray-100);
 
   .skeleton-footer-span {
     height: 1rem;

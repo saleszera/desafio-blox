@@ -22,7 +22,7 @@ export const Header = styled.header<BackgroundColorProps>`
 export const Modalities = styled.div`
   display: flex;
   justify-content: space-around;
-  background: #f8f8f8;
+  background: var(--gray-100);
   padding: 4rem 1rem;
 
   h1 {
@@ -56,7 +56,7 @@ export const Section = styled.footer`
   display: flex;
   justify-content: space-around;
 
-  background: #f8f8f8;
+  background: var(--gray-100);
   padding: 4rem 1rem;
   border-radius: 0 0 0.2rem 0.2rem;
 

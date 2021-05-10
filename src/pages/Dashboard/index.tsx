@@ -7,8 +7,7 @@ import {
   FilterTypesContainer,
   FilterTypeText,
   FilterContainer,
-  FilterInputContainer,
-  ItemsOrderContainer,
+  OrderButtonContainer,
   ItemContainer,
   NextPageButtonContainer,
   NextPageButton,
@@ -16,9 +15,11 @@ import {
 import { Card } from '../../components/Card';
 import { LoadingCard } from '../../components/shimmer/LoadingCard';
 import { DetailsModal } from '../../components/DetailsModal';
+import { Input } from '../../components/Input';
 import { api } from '../../services/api';
+import { useAuth } from '../../hooks/auth';
 
-interface Bloxe {
+export interface Bloxe {
   id: number;
   date_limit_edition: string;
   title: string;
@@ -52,13 +53,12 @@ export const Dashboard: React.FC = () => {
   const [bloxesFiltered, setBloxesFiltered] = useState<Bloxe[]>();
   const [showDetails, setShowDetails] = useState<Bloxe>();
   const [optionActive, setOptionActive] = useState('Todos');
-  const [token, setToken] = useState<string>();
   const [page, setPage] = useState(1);
   const [isGridActive, setIsGridActive] = useState(true);
-  const [isInputActive, setIsInputActive] = useState(false);
   const [isFinalPageReached, setIsFinalPageReached] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const { signIn } = useAuth();
 
   function handleOpenNewDetailsModal(bloxe: Bloxe) {
     setIsDetailsModalOpen(true);
@@ -73,68 +73,38 @@ export const Dashboard: React.FC = () => {
   }
 
   useEffect(() => {
-    function loadToken() {
-      const userTokenStored = localStorage.getItem('@desafioBlox:token');
+    setIsLoading(true);
 
-      if (userTokenStored) {
-        setToken(userTokenStored);
+    async function loadBloxes() {
+      await signIn();
+
+      const response = await api.get(`/bloxes?per=3&page=${page}`);
+
+      if (response.data.length === 0) {
+        setIsFinalPageReached(true);
+        setIsLoading(false);
       } else {
-        api
-          .post('/token', {
-            username: 'integratorTeste',
-            password: '12345',
-            institution_id: 22,
-          })
-          .then(({ data: tokenData }) => {
-            setToken(tokenData.token);
-            localStorage.setItem('@desafioBlox:token', tokenData.token);
-          });
+        const bloxesFormatted = response.data.map((item: Bloxe) => {
+          return {
+            ...item,
+            date_limit_edition: item.date_limit_edition
+              ? new Date(item.date_limit_edition).toLocaleDateString('pt-BR', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                })
+              : 'Sem data limite',
+          };
+        });
+        setBloxes(bloxesFormatted);
+        setBloxesFiltered(bloxesFormatted);
+        setIsFinalPageReached(false);
+        setIsLoading(false);
       }
     }
 
-    function loadData() {
-      setIsLoading(true);
-
-      api
-        .get(`/bloxes?per=3&page=${page}`, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then(({ data: bloxesData }) => {
-          if (bloxesData.length === 0) {
-            setIsFinalPageReached(true);
-            setIsLoading(false);
-          } else {
-            const bloxesFormatted = bloxesData.map((item: Bloxe) => {
-              return {
-                ...item,
-                date_limit_edition: item.date_limit_edition
-                  ? new Date(item.date_limit_edition).toLocaleDateString(
-                      'pt-BR',
-                      {
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric',
-                      }
-                    )
-                  : 'Sem data limite',
-              };
-            });
-            setBloxes(bloxesFormatted);
-            setBloxesFiltered(bloxesFormatted);
-            setIsFinalPageReached(false);
-            setIsLoading(false);
-            console.log(bloxesFormatted);
-          }
-        })
-        .catch(() => {
-          loadToken();
-        });
-    }
-
-    loadData();
-  }, [token, page]);
+    loadBloxes();
+  }, [signIn, page]);
 
   const handleFilterByStatus = useCallback(
     (option: string) => {
@@ -188,7 +158,6 @@ export const Dashboard: React.FC = () => {
     (value: string | number) => {
       if (value === '') {
         setBloxesFiltered(bloxes);
-        setIsInputActive(false);
       } else {
         const bloxesTilteredByIdOrTitle = bloxes?.filter(
           item =>
@@ -197,7 +166,6 @@ export const Dashboard: React.FC = () => {
         );
 
         setBloxesFiltered(bloxesTilteredByIdOrTitle);
-        setIsInputActive(true);
         setOptionActive('Todos');
       }
     },
@@ -226,17 +194,12 @@ export const Dashboard: React.FC = () => {
         <FilterTypesContainer>
           <FilterTypeText>{optionActive}</FilterTypeText>
 
-          <FilterContainer isSelectActive={optionActive !== 'Todos'}>
-            <FilterInputContainer isInputActive={isInputActive}>
-              <input
-                type="text"
-                placeholder="Título ou ID"
-                onChange={e => {
-                  handleFilterByTitleOrId(e.target.value);
-                }}
-              />
-              <FiSearch size={24} />
-            </FilterInputContainer>
+          <FilterContainer>
+            <Input
+              placeholder="Título ou ID"
+              icon={FiSearch}
+              onChange={e => handleFilterByTitleOrId(e.target.value)}
+            />
 
             <select
               id="status"
@@ -254,7 +217,7 @@ export const Dashboard: React.FC = () => {
           </FilterContainer>
         </FilterTypesContainer>
 
-        <ItemsOrderContainer>
+        <OrderButtonContainer>
           <button
             type="button"
             className={isGridActive ? 'active' : ''}
@@ -270,7 +233,7 @@ export const Dashboard: React.FC = () => {
           >
             <FiList size={24} />
           </button>
-        </ItemsOrderContainer>
+        </OrderButtonContainer>
 
         <ItemContainer isGridActive={isGridActive}>
           {isLoading ? (

@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import { FiXCircle, FiBookmark } from 'react-icons/fi';
 
 import Hexagon from '../Hexagon';
+import { Bloxe } from '../../pages/Dashboard';
 import {
   Header,
   Modalities,
@@ -16,32 +17,6 @@ import {
   Profile,
   Competencies,
 } from './styles';
-
-interface Bloxe {
-  id: number;
-  date_limit_edition: string;
-  title: string;
-  blox_profile: {
-    id: number;
-  };
-  modality: string;
-  knowledge_area: {
-    color1: string;
-    color2: string;
-    name: string;
-  };
-  responsibles: [{ name: string[] | string | null | undefined }];
-  status: string;
-  functional_area: {
-    name: string;
-  };
-  competences: [
-    {
-      name: string;
-    }
-  ];
-  hours: number;
-}
 
 interface DetailsModalProps {
   isOpen: boolean;

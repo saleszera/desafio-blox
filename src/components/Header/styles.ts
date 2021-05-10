@@ -7,7 +7,7 @@ export const Container = styled.div`
   flex-direction: column;
   padding: 2rem;
 
-  @media (max-width: 425px) {
+  @media (max-width: 760px) {
     text-align: center;
   }
 `;

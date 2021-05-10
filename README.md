@@ -40,6 +40,8 @@ O usuário pode:
 - [x] Avançar páginas
 - [x] Ver detalhes de uma unidade curricular
 
+**[Veja a aplicação rodando clicando aqui](https://gerenciador-unidades.herokuapp.com/)**
+
 ---
 
 ## 🚀 Como executar o projeto

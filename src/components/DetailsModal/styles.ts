@@ -18,6 +18,15 @@ export const Header = styled.header<BackgroundColorProps>`
   h1 {
     margin-left: 20rem;
   }
+
+  @media (max-width: 690px) {
+    justify-content: center;
+
+    h1 {
+      margin: 0;
+      text-align: center;
+    }
+  }
 `;
 export const Modalities = styled.div`
   display: flex;
@@ -38,6 +47,23 @@ export const Modalities = styled.div`
   .hexagon-position {
     bottom: 102px;
   }
+
+  @media (max-width: 690px) {
+    .hexagon-position {
+      display: none;
+    }
+  }
+
+  @media (max-width: 690px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1,
+    h2 {
+      text-align: center;
+    }
+  }
 `;
 
 export const ModalityContainer = styled.div``;
@@ -51,8 +77,14 @@ export const WorkloadContainer = styled.div`
     height: 100px;
     border-left: 2px solid var(--gray);
   }
+
+  @media (max-width: 690px) {
+    &:before {
+      content: unset;
+    }
+  }
 `;
-export const Section = styled.footer`
+export const Section = styled.section`
   display: flex;
   justify-content: space-around;
 
@@ -67,6 +99,12 @@ export const Section = styled.footer`
   p {
     color: var(--gray);
   }
+
+  @media (max-width: 690px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 export const Areas = styled.div`
   p {
@@ -78,6 +116,22 @@ export const KnowledgeArea = styled.div`
   div {
     display: flex;
     align-items: center;
+  }
+
+  @media (max-width: 400px) {
+    h2 {
+      text-align: center;
+    }
+
+    div {
+      margin-top: 0.5rem;
+      flex-direction: column;
+
+      p {
+        margin-top: 0.5rem;
+        text-align: center;
+      }
+    }
   }
 `;
 export const FunctionalArea = styled.div<BackgroundColorProps>`
@@ -93,6 +147,21 @@ export const FunctionalArea = styled.div<BackgroundColorProps>`
       }
     `}
   }
+
+  @media (max-width: 400px) {
+    h2 {
+      text-align: center;
+    }
+    div {
+      margin-top: 0.5rem;
+      flex-direction: column;
+
+      p {
+        margin-top: 0.5rem;
+        text-align: center;
+      }
+    }
+  }
 `;
 export const OtherThings = styled.div`
   margin: 2rem 0;
@@ -100,8 +169,29 @@ export const OtherThings = styled.div`
   p {
     margin-top: 5px;
   }
+
+  @media (max-width: 690px) {
+    display: flex;
+  }
+
+  @media (max-width: 400px) {
+    flex-direction: column;
+  }
 `;
-export const Profile = styled.div``;
+export const Profile = styled.div`
+  @media (max-width: 690px) {
+    margin: 2rem;
+  }
+
+  @media (max-width: 400px) {
+    margin: 1rem;
+
+    h2,
+    p {
+      text-align: center;
+    }
+  }
+`;
 export const Competencies = styled.div<BackgroundColorProps>`
   margin: 2rem 0;
 
@@ -114,5 +204,9 @@ export const Competencies = styled.div<BackgroundColorProps>`
     ${({ color }) => css`
       background: ${color};
     `}
+  }
+
+  @media (max-width: 400px) {
+    margin: 1rem;
   }
 `;

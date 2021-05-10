@@ -29,6 +29,14 @@ export const FilterTypesContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
+  @media (max-width: 820px) {
+    flex-direction: column-reverse;
+
+    h2 {
+      margin-top: 1rem;
+    }
+  }
 `;
 
 export const FilterTypeText = styled.h2`
@@ -52,6 +60,7 @@ export const FilterContainer = styled.div`
 
 export const OrderButtonContainer = styled.div`
   display: flex;
+  margin-top: 2rem;
 
   button {
     display: flex;
@@ -77,29 +86,32 @@ export const OrderButtonContainer = styled.div`
 `;
 
 export const ItemContainer = styled.div<GridActiveProps>`
-  margin-top: 4rem;
   display: grid;
   grid-gap: 2rem;
   justify-content: center;
+  margin-top: 4rem;
 
   ${({ isGridActive }) => css`
     grid-template-columns: ${isGridActive
       ? 'repeat(auto-fit, 350px)'
       : 'repeat(1, auto)'};
   `};
+
+  @media (max-width: 430px) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 export const NextPageButtonContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-
-  padding: 0.5rem;
 `;
 export const NextPageButton = styled.button<NextPageButtonProps>`
   flex: 1;
   max-width: 720px;
-  min-width: 240px;
+  /* min-width: 240px; */
   margin-top: 4rem;
   height: 4rem;
   border-radius: 0.5rem;
@@ -108,8 +120,10 @@ export const NextPageButton = styled.button<NextPageButtonProps>`
   color: var(--white);
   transition: filter 0.9s;
 
-  & + button {
-    margin-left: 0.5rem;
+  @media (max-width: 1850px) {
+    & + button {
+      margin-left: 0.5rem;
+    }
   }
 
   &:disabled {

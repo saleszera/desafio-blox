@@ -29,12 +29,21 @@ export const Header = styled.header<CardsProps>`
 
   padding: 0.5rem 2rem;
   border-radius: 0.2rem 0.2rem 0 0;
+  text-align: justify;
   ${({ backgroundColor }) => css`
     background: ${backgroundColor};
   `}
 
-  div {
-    text-align: justify;
+  @media (max-width: 430px) {
+    flex-direction: column-reverse;
+
+    svg {
+      margin-bottom: 1rem;
+    }
+  }
+
+  @media (max-width: 320px) {
+    text-align: center;
   }
 `;
 export const Main = styled.main<CardsProps>`
@@ -52,19 +61,21 @@ export const Main = styled.main<CardsProps>`
     padding: 2rem;
     text-align: center;
   }
+
+  @media (max-width: 375px) {
+    flex-direction: column;
+    justify-content: center;
+    height: 300px;
+    padding: 4rem 0;
+  }
 `;
 
 export const ItemType = styled.div`
   display: flex;
   flex-direction: column;
   margin: 1rem auto;
-
-  img {
-    width: 7rem;
-    height: 6rem;
-    border-radius: 20rem;
-  }
 `;
+
 export const Details = styled.div`
   display: flex;
   align-items: center;
@@ -90,5 +101,13 @@ export const Footer = styled.footer<CardsProps>`
 
   p {
     text-align: justify;
+  }
+
+  @media (max-width: 320px) {
+    p {
+      text-align: center;
+    }
+
+    padding: 1rem;
   }
 `;

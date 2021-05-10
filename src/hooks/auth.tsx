@@ -24,9 +24,9 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const signIn = useCallback(async () => {
     const response = await api.post('/token', {
-      username: 'integratorTeste',
-      password: '12345',
-      institution_id: 22,
+      username: process.env.REACT_APP_API_USERNAME,
+      password: process.env.REACT_APP_API_EMAIL,
+      institution_id: process.env.REACT_APP_API_INSTITUTION_ID,
     });
 
     localStorage.setItem('@desafioBlox:token', response.data.token);

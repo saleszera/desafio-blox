@@ -4,10 +4,6 @@ export const Container = styled.div`
   background: var(--blue);
 
   display: flex;
-  align-items: center;
+  flex-direction: column;
   padding: 2rem;
-
-  h1 {
-    text-align: center;
-  }
 `;
